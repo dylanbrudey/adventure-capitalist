@@ -18,7 +18,7 @@ const productList = [{
   name: 'Fraise',
   initialPrice: 80,
   image: 'https://grandest.mutualite.fr/content/uploads/sites/45/2020/05/Cover-FRAISES-730x480.jpg',
-  unlockPrice: 600,
+  unlockPrice: 1200,
   unlock: false
 }];
 
@@ -37,7 +37,7 @@ const Game = () => {
           </div>
         </div>
         <div className="col p-3">
-          {products.map((product) => {
+          {products.map((product, index) => {
             const { unlock, unlockPrice } = product;
             if (unlock || money >= unlockPrice) {
               return (
@@ -45,7 +45,9 @@ const Game = () => {
                   money={money}
                   setMoney={setMoney}
                   product={product}
+                  products={products}
                   setProducts={setProducts}
+                  productIndex={index}
                 />
               );
             }
