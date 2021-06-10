@@ -10,11 +10,12 @@ const Product = ({
   productIndex
 }) => {
   const {
-    image, initialPrice, unlockPrice, unlock, managerImage
+    image, initialPrice, unlockPrice, unlock, managerImage, managerUnlockPrice, managerUnlocked
   } = product;
   const [price, setPrice] = useState(initialPrice);
   const [productMoney, setProductMoney] = useState(0);
   const [completionPurcent, setCompletionPurcent] = useState(0);
+  const [managerAvailable, setManagerAvailable] = useState(false);
   const [nextLevel, setNextLevel] = useState({
     level: 2,
     moneyRequired: price * 2,
@@ -38,10 +39,18 @@ const Product = ({
     setCompletionPurcent(Math.round((productMoney * 100) / nextLevel.moneyRequired));
   };
 
+  const addManager = () => {
+    setMoney(money - managerUnlockPrice);
+    const updatedProducts = [...products];
+    updatedProducts[productIndex].managerUnlocked = !managerUnlocked;
+    setProducts(updatedProducts);
+  };
+
   const showPrice = `${price}$`;
   const showProductMoney = `${productMoney}$`;
   const showNextLevel = `Buy for ${nextLevel.moneyRequired}$`;
   const showCurrentLevel = `Level ${nextLevel.level - 1}`;
+  const showManagerUnlockPrice = `${managerUnlockPrice}$`;
 
   useEffect(() => {
     if (money >= nextLevel.moneyRequired && !nextLevel.activated) {
@@ -49,6 +58,11 @@ const Product = ({
     }
     if (money < nextLevel.moneyRequired && nextLevel.activated) {
       setNextLevel({ ...nextLevel, activated: false });
+    }
+    if (money >= managerUnlockPrice && unlock) {
+      setManagerAvailable(true);
+    } else {
+      setManagerAvailable(false);
     }
     setCompletionPurcent(Math.round((money * 100) / nextLevel.moneyRequired));
   });
@@ -92,9 +106,11 @@ const Product = ({
           )}
         <Col>
           <div>
-            <button type="button" className="btn mt-5 ml-2" onClick={addMoney} disabled={!unlock}>
+            <button type="button" className="btn ml-2" onClick={addManager} disabled={!managerAvailable || managerUnlocked}>
               <div className="img-container">
                 <img src={managerImage} className="img-fluid rounded" alt="Responsive" />
+                <span className="display-4" hidden={managerUnlocked}>{showManagerUnlockPrice}</span>
+                {/* <span className="display-4 bg-warning  p-1 pl-5 pr-5 mt-1">Buy</span> */}
               </div>
             </button>
           </div>

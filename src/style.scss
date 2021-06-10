@@ -62,3 +62,11 @@
 //     -1px 1px 0 #333,
 //      1px 1px 0 #333;
   }
+
+  .display-on-hover:hover {
+      display: block;
+  }
+  
+  .hide-on-hover:hover {
+      display: none;
+  }
