@@ -135,19 +135,12 @@ const LockedProductProperties = ({
   unlockPrice, products, setProducts, product, productIndex, setMoney, money
 }) => {
   const showUnlockPrice = `Unlock for ${unlockPrice}$`;
-  const [isUnlocked, setClick] = useState(false);
   const { unlock } = product;
 
-  useEffect(() => {
-    if (isUnlocked) {
-      const updatedProducts = [...products];
-      updatedProducts[productIndex].unlock = !unlock;
-      setProducts(updatedProducts);
-    }
-  });
-
   const unlockProduct = () => {
-    setClick(!isUnlocked);
+    const updatedProducts = [...products];
+    updatedProducts[productIndex].unlock = !unlock;
+    setProducts(updatedProducts);
     setMoney(money - unlockPrice);
   };
   return (
