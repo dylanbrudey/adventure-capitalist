@@ -10,7 +10,7 @@ const Product = ({
   productIndex
 }) => {
   const {
-    image, initialPrice, unlockPrice, unlock
+    image, initialPrice, unlockPrice, unlock, managerImage
   } = product;
   const [price, setPrice] = useState(initialPrice);
   const [productMoney, setProductMoney] = useState(0);
@@ -53,42 +53,52 @@ const Product = ({
     setCompletionPurcent(Math.round((money * 100) / nextLevel.moneyRequired));
   });
   return (
-    <Row>
-      <Col>
+    <div>
+      <Row>
+        <Col>
+          <div>
+            <button type="button" className="btn" onClick={addMoney} disabled={!unlock}>
+              <div className="img-container">
+                <img src={image} className="img-fluid rounded" alt="Responsive" />
+                <div className="text-block-price">
+                  <span className="display-4">{showPrice}</span>
+                </div>
+                <div className="text-block-level">
+                  <span className="display-4">{showCurrentLevel}</span>
+                </div>
+              </div>
+            </button>
+          </div>
+        </Col>
+        {unlock ? (
+          <UnlockedProductProperties
+            showProductMoney={showProductMoney}
+            buyNextLevel={buyNextLevel}
+            showNextLevel={showNextLevel}
+            nextLevel={nextLevel}
+            completionPurcent={completionPurcent}
+          />
+        )
+          : (
+            <LockedProductProperties
+              unlockPrice={unlockPrice}
+              product={product}
+              products={products}
+              setProducts={setProducts}
+              productIndex={productIndex}
+            />
+          )}
+      </Row>
+      <Row>
         <div>
           <button type="button" className="btn" onClick={addMoney} disabled={!unlock}>
             <div className="img-container">
-              <img src={image} className="img-fluid rounded" alt="Responsive" />
-              <div className="text-block-price">
-                <span className="display-4">{showPrice}</span>
-              </div>
-              <div className="text-block-level">
-                <span className="display-4">{showCurrentLevel}</span>
-              </div>
+              <img src={managerImage} className="img-fluid rounded" alt="Responsive" />
             </div>
           </button>
-          <button type="button" className="btn btn-dark" onClick={buyNextLevel} hidden>OHOHO</button>
         </div>
-      </Col>
-      {unlock ? (
-        <UnlockedProductProperties
-          showProductMoney={showProductMoney}
-          buyNextLevel={buyNextLevel}
-          showNextLevel={showNextLevel}
-          nextLevel={nextLevel}
-          completionPurcent={completionPurcent}
-        />
-      )
-        : (
-          <LockedProductProperties
-            unlockPrice={unlockPrice}
-            product={product}
-            products={products}
-            setProducts={setProducts}
-            productIndex={productIndex}
-          />
-        )}
-    </Row>
+      </Row>
+    </div>
   );
 };
 
@@ -111,7 +121,7 @@ const UnlockedProductProperties = ({
         <div className="progress-bar bg-danger" role="progressbar" style={{ width: showCompletionPurcent }} aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> </div>
       </div>
       <div className="card">
-        <button type="button" className="btn btn-warning" onClick={buyNextLevel} disabled={!nextLevel.activated}>
+        <button type="button" className="btn btn-warning text-white" onClick={buyNextLevel} disabled={!nextLevel.activated}>
           <span className="display-4">{showNextLevel}</span>
         </button>
       </div>
