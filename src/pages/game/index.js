@@ -32,7 +32,7 @@ const productList = [{
 }];
 
 const Game = () => {
-  const amount = 1;
+  const amount = 1000;
   const [money, setMoney] = useState(amount);
   const [products, setProducts] = useState(productList);
   const showMoney = `${money}$`;
@@ -40,11 +40,6 @@ const Game = () => {
   return (
     <Page>
       <div className="container">
-        <div className="m-4">
-          <div className="col-12 display-2 border-left mb-5 text-warning font-weight-bold">
-            {showMoney}
-          </div>
-        </div>
         <div className="col p-3">
           {products.map((product, index) => {
             const { unlock, unlockPrice } = product;
@@ -62,6 +57,13 @@ const Game = () => {
             }
             return null;
           })}
+        </div>
+      </div>
+      <div className="col-4 fixed-bottom fixed-element text-center rounded ">
+        <div className="">
+          <div className="display-3 text-white font-weight-bold">
+            {showMoney}
+          </div>
         </div>
       </div>
     </Page>

@@ -55,7 +55,7 @@ const Product = ({
   return (
     <div>
       <Row>
-        <Col>
+        <Col xs={5}>
           <div>
             <button type="button" className="btn" onClick={addMoney} disabled={!unlock}>
               <div className="img-container">
@@ -86,17 +86,19 @@ const Product = ({
               products={products}
               setProducts={setProducts}
               productIndex={productIndex}
+              setMoney={setMoney}
+              money={money}
             />
           )}
-      </Row>
-      <Row>
-        <div>
-          <button type="button" className="btn" onClick={addMoney} disabled={!unlock}>
-            <div className="img-container">
-              <img src={managerImage} className="img-fluid rounded" alt="Responsive" />
-            </div>
-          </button>
-        </div>
+        <Col>
+          <div>
+            <button type="button" className="btn mt-5 ml-2" onClick={addMoney} disabled={!unlock}>
+              <div className="img-container">
+                <img src={managerImage} className="img-fluid rounded" alt="Responsive" />
+              </div>
+            </button>
+          </div>
+        </Col>
       </Row>
     </div>
   );
@@ -111,7 +113,7 @@ const UnlockedProductProperties = ({
 }) => {
   const showCompletionPurcent = `${completionPurcent}%`;
   return (
-    <Col className="ml-5 pl-5 text-center" xs={6}>
+    <Col className="ml-5 pl-5 text-center" xs={4}>
       <div className="card mb-2 mt-4">
         <div className="card-body">
           <h5 className="card-title display-3">{showProductMoney}</h5>
@@ -130,7 +132,7 @@ const UnlockedProductProperties = ({
 };
 
 const LockedProductProperties = ({
-  unlockPrice, products, setProducts, product, productIndex
+  unlockPrice, products, setProducts, product, productIndex, setMoney, money
 }) => {
   const showUnlockPrice = `Unlock for ${unlockPrice}$`;
   const [isUnlocked, setClick] = useState(false);
@@ -143,9 +145,14 @@ const LockedProductProperties = ({
       setProducts(updatedProducts);
     }
   });
+
+  const unlockProduct = () => {
+    setClick(!isUnlocked);
+    setMoney(money - unlockPrice);
+  };
   return (
-    <Col className="ml-5 pl-5 text-center" xs={6}>
-      <button type="button" className="card mb-2 mt-4 unlock-button" onClick={() => { setClick(!isUnlocked); }}>
+    <Col className="ml-5 pl-5 text-center" xs={4}>
+      <button type="button" className="card mb-2 mt-4 unlock-button" onClick={unlockProduct}>
         <div className="card-body">
           <h5 className="card-title display-3">{showUnlockPrice}</h5>
         </div>
