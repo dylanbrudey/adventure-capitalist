@@ -1,50 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import {
+  addMoney, buyNextLevel, addManager, checkChanges, unlockProduct
+} from '../../actions/products';
 
 const Product = ({
   money,
-  setMoney,
-  product,
   products,
-  setProducts,
-  productIndex
+  productIndex,
+  dispatch
 }) => {
+  const product = products[productIndex];
   const {
-    image, initialPrice, unlockPrice, unlock, managerImage, managerUnlockPrice, managerUnlocked
+    image, price, unlockPrice, unlock, managerImage,
+    managerUnlockPrice, managerUnlocked, managerAvailable, nextLevel, productMoney,
+    completionPurcent
   } = product;
-  const [price, setPrice] = useState(initialPrice);
-  const [productMoney, setProductMoney] = useState(0);
-  const [completionPurcent, setCompletionPurcent] = useState(0);
-  const [managerAvailable, setManagerAvailable] = useState(false);
-  const [nextLevel, setNextLevel] = useState({
-    level: 2,
-    moneyRequired: price * 2,
-    activated: false
-  });
-  const { level, moneyRequired, activated } = nextLevel;
-  const delay = initialPrice * 0.1;
-  const addMoney = () => {
-    setMoney(money + price);
-    setProductMoney(productMoney + price);
-  };
+  // const [price, setPrice] = useState(price);
+  // // const [productMoney, setProductMoney] = useState(0);
+  // const [completionPurcent, setCompletionPurcent] = useState(0);
+  // const [managerAvailable, setManagerAvailable] = useState(false);
+  // const [nextLevel, setNextLevel] = useState({
+  //   level: 2,
+  //   moneyRequired: price * 2,
+  //   activated: false
+  // });
+  const { level, moneyRequired } = nextLevel;
+  const delay = price * 0.1;
+  // const addMoney = () => {
+  //   setMoney(money + price);
+  //   setProductMoney(productMoney + price);
+  // };
 
-  const buyNextLevel = () => {
-    setPrice(Math.round(price * 1.25));
-    setNextLevel({
-      level: level + 1,
-      moneyRequired: moneyRequired * 2,
-      activated: false
-    });
-    setMoney(money - moneyRequired);
-    setCompletionPurcent(Math.round((productMoney * 100) / moneyRequired));
-  };
+  // const buyNextLevel = () => {
+  //   setPrice(Math.round(price * 1.25));
+  //   setNextLevel({
+  //     level: level + 1,
+  //     moneyRequired: moneyRequired * 2,
+  //     activated: false
+  //   });
+  //   setMoney(money - moneyRequired);
+  //   setCompletionPurcent(Math.round((productMoney * 100) / moneyRequired));
+  // };
 
-  const addManager = () => {
-    setMoney(money - managerUnlockPrice);
-    const updatedProducts = [...products];
-    updatedProducts[productIndex].managerUnlocked = !managerUnlocked;
-    setProducts(updatedProducts);
-  };
+  // const addManager = () => {
+  //   setMoney(money - managerUnlockPrice);
+  //   const updatedProducts = [...products];
+  //   updatedProducts[productIndex].managerUnlocked = !managerUnlocked;
+  //   setProducts(updatedProducts);
+  // };
 
   const showPrice = `${price}$`;
   const showProductMoney = `${productMoney}$`;
@@ -53,23 +58,24 @@ const Product = ({
   const showManagerUnlockPrice = `${managerUnlockPrice}$`;
 
   useEffect(() => {
-    if (money >= moneyRequired && !activated) {
-      setNextLevel({ ...nextLevel, activated: true });
-    }
-    if (money < moneyRequired && activated) {
-      setNextLevel({ ...nextLevel, activated: false });
-    }
-    if (money >= managerUnlockPrice && unlock) {
-      setManagerAvailable(true);
-    } else {
-      setManagerAvailable(false);
-    }
-    setCompletionPurcent(Math.round((money * 100) / moneyRequired));
+    // if (money >= moneyRequired && !activated) {
+    //   setNextLevel({ ...nextLevel, activated: true });
+    // }
+    // if (money < moneyRequired && activated) {
+    //   setNextLevel({ ...nextLevel, activated: false });
+    // }
+    // if (money >= managerUnlockPrice && unlock) {
+    //   setManagerAvailable(true);
+    // } else {
+    //   setManagerAvailable(false);
+    // }
+    // setCompletionPurcent(Math.round((money * 100) / moneyRequired));
+    dispatch(checkChanges(productIndex));
   }, [money, product]);
 
   useEffect(() => {
     if (managerUnlocked) {
-      const timer = setTimeout(() => addMoney(), delay * 1000);
+      const timer = setTimeout(() => dispatch(addMoney(productIndex)), delay * 1000);
       return () => {
         clearTimeout(timer);
       };
@@ -107,12 +113,6 @@ const Product = ({
           : (
             <LockedProductProperties
               unlockPrice={unlockPrice}
-              product={product}
-              products={products}
-              setProducts={setProducts}
-              productIndex={productIndex}
-              setMoney={setMoney}
-              money={money}
             />
           )}
         <Col>
@@ -133,7 +133,6 @@ const Product = ({
 
 const UnlockedProductProperties = ({
   showProductMoney,
-  buyNextLevel,
   showNextLevel,
   nextLevel,
   completionPurcent
@@ -159,17 +158,16 @@ const UnlockedProductProperties = ({
 };
 
 const LockedProductProperties = ({
-  unlockPrice, products, setProducts, product, productIndex, setMoney, money
+  unlockPrice
 }) => {
   const showUnlockPrice = `Unlock for ${unlockPrice}$`;
-  const { unlock } = product;
 
-  const unlockProduct = () => {
-    const updatedProducts = [...products];
-    updatedProducts[productIndex].unlock = !unlock;
-    setProducts(updatedProducts);
-    setMoney(money - unlockPrice);
-  };
+  // const unlockProduct = () => {
+  //   const updatedProducts = [...products];
+  //   updatedProducts[productIndex].unlock = !unlock;
+  //   setProducts(updatedProducts);
+  //   setMoney(money - unlockPrice);
+  // };
   return (
     <Col className="ml-5 pl-5 text-center" xs={4}>
       <button type="button" className="card mb-2 mt-4 unlock-button" onClick={unlockProduct}>
@@ -180,4 +178,9 @@ const LockedProductProperties = ({
     </Col>
   );
 };
-export default Product;
+
+const mapStateToProps = (state) => ({
+  products: state.products,
+  money: state.money
+});
+export default connect(mapStateToProps)(Product);
