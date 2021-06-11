@@ -21,22 +21,22 @@ const Product = ({
     moneyRequired: price * 2,
     activated: false
   });
-
+  const { level, moneyRequired, activated } = nextLevel;
+  const delay = initialPrice * 0.1;
   const addMoney = () => {
     setMoney(money + price);
     setProductMoney(productMoney + price);
   };
 
   const buyNextLevel = () => {
-    const { level, moneyRequired } = nextLevel;
     setPrice(Math.round(price * 1.25));
     setNextLevel({
       level: level + 1,
       moneyRequired: moneyRequired * 2,
       activated: false
     });
-    setMoney(money - nextLevel.moneyRequired);
-    setCompletionPurcent(Math.round((productMoney * 100) / nextLevel.moneyRequired));
+    setMoney(money - moneyRequired);
+    setCompletionPurcent(Math.round((productMoney * 100) / moneyRequired));
   };
 
   const addManager = () => {
@@ -48,15 +48,15 @@ const Product = ({
 
   const showPrice = `${price}$`;
   const showProductMoney = `${productMoney}$`;
-  const showNextLevel = `Buy for ${nextLevel.moneyRequired}$`;
-  const showCurrentLevel = `Level ${nextLevel.level - 1}`;
+  const showNextLevel = `Buy for ${moneyRequired}$`;
+  const showCurrentLevel = `Level ${level - 1}`;
   const showManagerUnlockPrice = `${managerUnlockPrice}$`;
 
   useEffect(() => {
-    if (money >= nextLevel.moneyRequired && !nextLevel.activated) {
+    if (money >= moneyRequired && !activated) {
       setNextLevel({ ...nextLevel, activated: true });
     }
-    if (money < nextLevel.moneyRequired && nextLevel.activated) {
+    if (money < moneyRequired && activated) {
       setNextLevel({ ...nextLevel, activated: false });
     }
     if (money >= managerUnlockPrice && unlock) {
@@ -64,7 +64,18 @@ const Product = ({
     } else {
       setManagerAvailable(false);
     }
-    setCompletionPurcent(Math.round((money * 100) / nextLevel.moneyRequired));
+    setCompletionPurcent(Math.round((money * 100) / moneyRequired));
+  }, [money, product]);
+
+  useEffect(() => {
+    if (managerUnlocked) {
+      const timer = setTimeout(() => addMoney(), delay * 1000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+    return () => {
+    };
   });
   return (
     <div>
@@ -136,7 +147,7 @@ const UnlockedProductProperties = ({
         </div>
       </div>
       <div className="progress mb-2">
-        <div className="progress-bar bg-danger" role="progressbar" style={{ width: showCompletionPurcent }} aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> </div>
+        <div className="progress-bar bg-dark" role="progressbar" style={{ width: showCompletionPurcent }} aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> </div>
       </div>
       <div className="card">
         <button type="button" className="btn btn-warning text-white" onClick={buyNextLevel} disabled={!nextLevel.activated}>

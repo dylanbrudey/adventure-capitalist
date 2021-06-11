@@ -61,7 +61,7 @@ const Game = () => {
       </div>
       <div className="col-4 fixed-bottom fixed-element text-center rounded ">
         <div className="">
-          <div className="display-3 text-white font-weight-bold">
+          <div className="display-3 money text-white font-weight-bold">
             {showMoney}
           </div>
         </div>
