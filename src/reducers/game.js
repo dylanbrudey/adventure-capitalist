@@ -27,22 +27,22 @@ const initialState = { money: 1000, products: productList };
 // };
 
 const addMoney = (state = initialState, action) => {
-  let currentState = state;
+  let currentState = { ...state };
   const currentPrice = state.products[action.productIndex].price;
   const currentProductMoney = state.products[action.productIndex].productMoney;
-  currentState = { ...currentState, money: state.money + currentPrice };
-  currentState.products.map((product, index) => {
-    if (index !== action.productIndex) {
-      // This isn't the product we care about - keep it as-is
+  currentState = { ...currentState, money: currentState.money + currentPrice };
+  currentState = {
+    ...currentState,
+    products: currentState.products.map((product, index) => {
+      if (index === action.productIndex) {
+        return {
+          ...product,
+          productMoney: currentProductMoney + currentPrice
+        };
+      }
       return product;
-    }
-
-    // Otherwise, this is the one we want - return an updated value
-    return {
-      ...product,
-      productMoney: currentProductMoney + currentPrice
-    };
-  });
+    })
+  };
   return currentState;
 };
 
@@ -62,7 +62,7 @@ const addMoney = (state = initialState, action) => {
 // }
 
 const buyNextLevel = (state = initialState, action) => {
-  const currentState = state;
+  const currentState = { ...state };
   const { level, moneyRequired } = currentState.products[action.productIndex].nextLevel;
   const { productMoney } = currentState.products[action.productIndex];
   currentState.products[action.productIndex].price *= 1.25;
@@ -79,33 +79,118 @@ const buyNextLevel = (state = initialState, action) => {
 };
 
 const addManager = (state = initialState, action) => {
-  const currentState = state;
-  const { managerUnlocked, managerUnlockPrice } = currentState.products[action.productIndex];
+  let currentState = { ...state };
+  const { managerUnlockPrice } = currentState.products[action.productIndex];
   currentState.money -= managerUnlockPrice;
-  currentState.products[action.productIndex].managerUnlocked = !managerUnlocked;
+  currentState = { ...currentState, money: currentState.money + managerUnlockPrice };
+  currentState = {
+    ...currentState,
+    products: currentState.products.map((product, index) => {
+      if (index === action.productIndex) {
+        return {
+          ...product,
+          managerUnlocked: true
+        };
+      }
+      return product;
+    })
+  };
 
   return currentState;
 };
 
-const checkChanges = (state = initialState, action) => {
-  const currentState = state;
+const updateNextLevelAvailability = (state = initialState, action) => {
+  let currentState = { ...state };
   console.log(currentState);
-  const { money } = currentState;
-  const { unlock, managerUnlockPrice, productMoney } = currentState.products[action.productIndex];
-  const { moneyRequired, activated } = currentState.products[action.productIndex].nextLevel;
-  if (money >= moneyRequired && !activated) {
-    currentState.products[action.productIndex].nextLevel.activated = true;
-  } else if (money < moneyRequired && activated) {
-    currentState.products[action.productIndex].nextLevel.activated = false;
+
+  // if (money >= moneyRequired && !activated) {
+  if (action.available) {
+    currentState = {
+      ...currentState,
+      products: currentState.products.map((product, index) => {
+        if (index === action.productIndex) {
+          return {
+            ...product,
+            activated: true
+          };
+        }
+        return product;
+      })
+    };
+  } else {
+    currentState = {
+      ...currentState,
+      products: currentState.products.map((product, index) => {
+        if (index === action.productIndex) {
+          return {
+            ...product,
+            activated: false
+          };
+        }
+        return product;
+      })
+    };
   }
 
-  if (money >= managerUnlockPrice && unlock) {
-    currentState.products[action.productIndex].managerAvailable = true;
-  } else {
-    currentState.products[action.productIndex].managerAvailable = false;
+  return currentState;
+};
+
+const updateManagerAvailability = (state = initialState, action) => {
+  let currentState = { ...state };
+  console.log(currentState);
+
+  // if (money >= managerUnlockPrice && unlock) {
+  if (action.available) {
+    currentState = {
+      ...currentState,
+      products: currentState.products.map((product, index) => {
+        if (index === action.productIndex) {
+          return {
+            ...product,
+            managerAvailable: true
+          };
+        }
+        return product;
+      })
+    };
   }
-  currentState.products[action.productIndex]
-    .completionPurcent = Math.round((productMoney * 100) / moneyRequired);
+  if (!action.available) {
+  // if (money < managerUnlockPrice && !unlock) {
+    currentState = {
+      ...currentState,
+      products: currentState.products.map((product, index) => {
+        if (index === action.productIndex) {
+          return {
+            ...product,
+            managerAvailable: false
+          };
+        }
+        return product;
+      })
+    };
+  }
+
+  return currentState;
+};
+
+const updateCompletionBar = (state = initialState, action) => {
+  let currentState = { ...state };
+  console.log(currentState);
+  const { productMoney } = currentState.products[action.productIndex];
+  const { moneyRequired } = currentState.products[action.productIndex].nextLevel;
+
+  currentState = {
+    ...currentState,
+    products: currentState.products.map((product, index) => {
+      if (index === action.productIndex) {
+        return {
+          ...product,
+          completionPurcent: Math.round((productMoney * 100) / moneyRequired)
+        };
+      }
+      return product;
+    })
+  };
 
   return currentState;
 };
@@ -127,8 +212,12 @@ const game = (state = initialState, action) => {
       return buyNextLevel(state, action);
     case actionsType.ADD_MANAGER:
       return addManager(state, action);
-    case actionsType.CHECK_CHANGES:
-      return checkChanges(state, action);
+    case actionsType.UPDATE_COMPLETION:
+      return updateCompletionBar(state, action);
+    case actionsType.UPDATE_NEXT_LEVEL:
+      return updateNextLevelAvailability(state, action);
+    case actionsType.UPDATE_MANAGER_AVAILABILITY:
+      return updateManagerAvailability(state, action);
     case actionsType.UNLOCK_PRODUCT:
       return unlockProduct(state, action);
     default:

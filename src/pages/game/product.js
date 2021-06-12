@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
-  addMoney, buyNextLevel, addManager, checkChanges, unlockProduct
+  addMoney, buyNextLevel, addManager, unlockProduct, updateNextLevelAvailability,
+  updateManagerAvailability, updateCompletionBar
 } from '../../actions/game';
 
 const Product = ({
@@ -15,7 +16,7 @@ const Product = ({
   const {
     image, price, unlockPrice, unlock, managerImage,
     managerUnlockPrice, managerUnlocked, managerAvailable, nextLevel, productMoney,
-    completionPurcent
+    completionPurcent, activated
   } = product;
   // const [price, setPrice] = useState(price);
   // // const [productMoney, setProductMoney] = useState(0);
@@ -58,19 +59,18 @@ const Product = ({
   const showManagerUnlockPrice = `${managerUnlockPrice}$`;
 
   useEffect(() => {
-    // if (money >= moneyRequired && !activated) {
-    //   setNextLevel({ ...nextLevel, activated: true });
-    // }
-    // if (money < moneyRequired && activated) {
-    //   setNextLevel({ ...nextLevel, activated: false });
-    // }
-    // if (money >= managerUnlockPrice && unlock) {
-    //   setManagerAvailable(true);
-    // } else {
-    //   setManagerAvailable(false);
-    // }
-    // setCompletionPurcent(Math.round((money * 100) / moneyRequired));
-    dispatch(checkChanges(productIndex));
+    if (money >= moneyRequired && !activated) {
+      dispatch(updateNextLevelAvailability(productIndex, true));
+    }
+    if (money < moneyRequired && activated) {
+      dispatch(updateNextLevelAvailability(productIndex, false));
+    }
+    if (money >= managerUnlockPrice && unlock) {
+      dispatch(updateManagerAvailability(productIndex, true));
+    } else {
+      dispatch(updateManagerAvailability(productIndex, false));
+    }
+    dispatch(updateCompletionBar(productIndex));
   }, [money, product]);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const Product = ({
       <Row>
         <Col xs={5}>
           <div>
-            <button type="button" className="btn" onClick={() => addMoney(productIndex)} disabled={!unlock}>
+            <button type="button" className="btn" onClick={() => dispatch(addMoney(productIndex))} disabled={!unlock}>
               <div className="img-container">
                 <img src={image} className="img-fluid rounded" alt="Responsive" />
                 <div className="text-block-price">
@@ -108,16 +108,20 @@ const Product = ({
             showNextLevel={showNextLevel}
             nextLevel={nextLevel}
             completionPurcent={completionPurcent}
+            productIndex={productIndex}
+            dispatch={dispatch}
           />
         )
           : (
             <LockedProductProperties
               unlockPrice={unlockPrice}
+              productIndex={productIndex}
+              dispatch={dispatch}
             />
           )}
         <Col>
           <div>
-            <button type="button" className="btn ml-2" onClick={addManager} disabled={!managerAvailable || managerUnlocked}>
+            <button type="button" className="btn ml-2" onClick={() => dispatch(addManager(productIndex))} disabled={!managerAvailable || managerUnlocked}>
               <div className="img-container">
                 <img src={managerImage} className="img-fluid rounded" alt="Responsive" />
                 <span className="display-4" hidden={managerUnlocked}>{showManagerUnlockPrice}</span>
@@ -135,7 +139,9 @@ const UnlockedProductProperties = ({
   showProductMoney,
   showNextLevel,
   nextLevel,
-  completionPurcent
+  completionPurcent,
+  productIndex,
+  dispatch
 }) => {
   const showCompletionPurcent = `${completionPurcent}%`;
   return (
@@ -149,7 +155,7 @@ const UnlockedProductProperties = ({
         <div className="progress-bar bg-dark" role="progressbar" style={{ width: showCompletionPurcent }} aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"> </div>
       </div>
       <div className="card">
-        <button type="button" className="btn btn-warning text-white" onClick={buyNextLevel} disabled={!nextLevel.activated}>
+        <button type="button" className="btn btn-warning text-white" onClick={() => dispatch(buyNextLevel(productIndex))} disabled={!nextLevel.activated}>
           <span className="display-4">{showNextLevel}</span>
         </button>
       </div>
@@ -158,7 +164,9 @@ const UnlockedProductProperties = ({
 };
 
 const LockedProductProperties = ({
-  unlockPrice
+  unlockPrice,
+  productIndex,
+  dispatch
 }) => {
   const showUnlockPrice = `Unlock for ${unlockPrice}$`;
 
@@ -170,7 +178,7 @@ const LockedProductProperties = ({
   // };
   return (
     <Col className="ml-5 pl-5 text-center" xs={4}>
-      <button type="button" className="card mb-2 mt-4 unlock-button" onClick={unlockProduct}>
+      <button type="button" className="card mb-2 mt-4 unlock-button" onClick={() => dispatch(unlockProduct(productIndex))}>
         <div className="card-body">
           <h5 className="card-title display-3">{showUnlockPrice}</h5>
         </div>
