@@ -1,4 +1,4 @@
-import { actionsType } from '../actions/products';
+import { actionsType } from '../actions/game';
 import productList from '../pages/game/data';
 
 const initialState = { money: 1000, products: productList };
@@ -27,13 +27,39 @@ const initialState = { money: 1000, products: productList };
 // };
 
 const addMoney = (state = initialState, action) => {
-  const currentState = state;
-  const currentPrice = currentState.products[action.productIndex].price;
-  currentState.money += currentPrice;
-  currentState.products[action.productIndex].productMoney += currentPrice;
+  let currentState = state;
+  const currentPrice = state.products[action.productIndex].price;
+  const currentProductMoney = state.products[action.productIndex].productMoney;
+  currentState = { ...currentState, money: state.money + currentPrice };
+  currentState.products.map((product, index) => {
+    if (index !== action.productIndex) {
+      // This isn't the product we care about - keep it as-is
+      return product;
+    }
 
+    // Otherwise, this is the one we want - return an updated value
+    return {
+      ...product,
+      productMoney: currentProductMoney + currentPrice
+    };
+  });
   return currentState;
 };
+
+// function updateObjectInArray(array, action) {
+//   return array.map((item, index) => {
+//     if (index !== action.index) {
+//       // This isn't the item we care about - keep it as-is
+//       return item;
+//     }
+
+//     // Otherwise, this is the one we want - return an updated value
+//     return {
+//       ...item,
+//       ...action.item
+//     };
+//   });
+// }
 
 const buyNextLevel = (state = initialState, action) => {
   const currentState = state;
@@ -63,6 +89,7 @@ const addManager = (state = initialState, action) => {
 
 const checkChanges = (state = initialState, action) => {
   const currentState = state;
+  console.log(currentState);
   const { money } = currentState;
   const { unlock, managerUnlockPrice, productMoney } = currentState.products[action.productIndex];
   const { moneyRequired, activated } = currentState.products[action.productIndex].nextLevel;
@@ -92,7 +119,7 @@ const unlockProduct = (state = initialState, action) => {
   return currentState;
 };
 
-const products = (state = initialState, action) => {
+const game = (state = initialState, action) => {
   switch (action.type) {
     case actionsType.ADD_MONEY:
       return addMoney(state, action);
@@ -109,4 +136,4 @@ const products = (state = initialState, action) => {
   }
 };
 
-export default products;
+export default game;

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Page from '..';
 import Product from './product';
 
-const Game = ({ products, money }) => {
+const Game = ({ money, products }) => {
   const showMoney = `${money}$`;
 
   return (
@@ -27,8 +27,17 @@ const Game = ({ products, money }) => {
 };
 
 const mapStateToProps = (state) => ({
-  products: state.products,
-  money: state.money
+  products: state.game.products,
+  money: state.game.money
 });
+
+// function mapStateToProps(state) {
+//   console.log(state);
+//   return {
+//     a: 42,
+//     todos: state.todos,
+//     filter: state.visibilityFilter
+//   };
+// }
 
 export default connect(mapStateToProps)(Game);

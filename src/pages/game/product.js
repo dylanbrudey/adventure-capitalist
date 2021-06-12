@@ -3,7 +3,7 @@ import { Col, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {
   addMoney, buyNextLevel, addManager, checkChanges, unlockProduct
-} from '../../actions/products';
+} from '../../actions/game';
 
 const Product = ({
   money,
@@ -88,7 +88,7 @@ const Product = ({
       <Row>
         <Col xs={5}>
           <div>
-            <button type="button" className="btn" onClick={addMoney} disabled={!unlock}>
+            <button type="button" className="btn" onClick={() => addMoney(productIndex)} disabled={!unlock}>
               <div className="img-container">
                 <img src={image} className="img-fluid rounded" alt="Responsive" />
                 <div className="text-block-price">
@@ -180,7 +180,7 @@ const LockedProductProperties = ({
 };
 
 const mapStateToProps = (state) => ({
-  products: state.products,
-  money: state.money
+  products: state.game.products,
+  money: state.game.money
 });
 export default connect(mapStateToProps)(Product);

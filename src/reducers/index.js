@@ -1,8 +1,6 @@
 import { combineReducers } from 'redux';
-import comments from './comments';
-import products from './products';
+import game from './game';
 
 export default combineReducers({
-  comments,
-  products
+  game
 });
