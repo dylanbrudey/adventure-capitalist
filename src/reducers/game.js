@@ -62,18 +62,28 @@ const addMoney = (state = initialState, action) => {
 // }
 
 const buyNextLevel = (state = initialState, action) => {
-  const currentState = { ...state };
+  let currentState = { ...state };
   const { level, moneyRequired } = currentState.products[action.productIndex].nextLevel;
-  const { productMoney } = currentState.products[action.productIndex];
-  currentState.products[action.productIndex].price *= 1.25;
-  currentState.products[action.productIndex].nextLevel = {
-    level: level + 1,
-    moneyRequired: moneyRequired * 2,
-    activated: false
+  const { price } = currentState.products[action.productIndex];
+  currentState = {
+    ...currentState,
+    products: currentState.products.map((product, index) => {
+      if (index === action.productIndex) {
+        return {
+          ...product,
+          price: Math.round(price * 1.25),
+          nextLevel: {
+            level: level + 1,
+            moneyRequired: moneyRequired * 2,
+            activated: false
+          }
+        };
+      }
+      return product;
+    })
   };
-  currentState.money -= moneyRequired;
-  currentState.products[action.productIndex]
-    .completionPurcent = Math.round((productMoney * 100) / moneyRequired);
+  currentState = { ...currentState, money: currentState.money - moneyRequired };
+  // (Math.round(price * 1.25)
 
   return currentState;
 };
@@ -81,8 +91,7 @@ const buyNextLevel = (state = initialState, action) => {
 const addManager = (state = initialState, action) => {
   let currentState = { ...state };
   const { managerUnlockPrice } = currentState.products[action.productIndex];
-  currentState.money -= managerUnlockPrice;
-  currentState = { ...currentState, money: currentState.money + managerUnlockPrice };
+  currentState = { ...currentState, money: currentState.money - managerUnlockPrice };
   currentState = {
     ...currentState,
     products: currentState.products.map((product, index) => {
@@ -102,7 +111,7 @@ const addManager = (state = initialState, action) => {
 const updateNextLevelAvailability = (state = initialState, action) => {
   let currentState = { ...state };
   console.log(currentState);
-
+  console.log(action.available);
   // if (money >= moneyRequired && !activated) {
   if (action.available) {
     currentState = {
@@ -111,7 +120,7 @@ const updateNextLevelAvailability = (state = initialState, action) => {
         if (index === action.productIndex) {
           return {
             ...product,
-            activated: true
+            nextLevel: { ...product.nextLevel, activated: true }
           };
         }
         return product;
@@ -124,7 +133,7 @@ const updateNextLevelAvailability = (state = initialState, action) => {
         if (index === action.productIndex) {
           return {
             ...product,
-            activated: false
+            nextLevel: { ...product.nextLevel, activated: false }
           };
         }
         return product;
@@ -153,8 +162,7 @@ const updateManagerAvailability = (state = initialState, action) => {
         return product;
       })
     };
-  }
-  if (!action.available) {
+  } else {
   // if (money < managerUnlockPrice && !unlock) {
     currentState = {
       ...currentState,
@@ -176,7 +184,6 @@ const updateManagerAvailability = (state = initialState, action) => {
 const updateCompletionBar = (state = initialState, action) => {
   let currentState = { ...state };
   console.log(currentState);
-  const { productMoney } = currentState.products[action.productIndex];
   const { moneyRequired } = currentState.products[action.productIndex].nextLevel;
 
   currentState = {
@@ -185,7 +192,7 @@ const updateCompletionBar = (state = initialState, action) => {
       if (index === action.productIndex) {
         return {
           ...product,
-          completionPurcent: Math.round((productMoney * 100) / moneyRequired)
+          completionPurcent: Math.round((currentState.money * 100) / moneyRequired)
         };
       }
       return product;
@@ -196,10 +203,23 @@ const updateCompletionBar = (state = initialState, action) => {
 };
 
 const unlockProduct = (state = initialState, action) => {
-  const currentState = state;
+  let currentState = { ...state };
   const { unlock, unlockPrice } = currentState.products[action.productIndex];
-  currentState.products[action.productIndex].unlock = !unlock;
-  currentState.money -= unlockPrice;
+
+  currentState = {
+    ...currentState,
+    products: currentState.products.map((product, index) => {
+      if (index === action.productIndex) {
+        return {
+          ...product,
+          unlock: !unlock
+        };
+      }
+      return product;
+    })
+  };
+
+  currentState = { ...currentState, money: currentState.money - unlockPrice };
 
   return currentState;
 };

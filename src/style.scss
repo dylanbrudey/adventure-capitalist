@@ -1,5 +1,5 @@
 .container {
-  max-width: 1400px;
+  max-width: 1200px;
 }
 .papaye {
   margin-top: 15%;
@@ -67,10 +67,43 @@
   //      1px 1px 0 #333;
 }
 
+.text-block-manager-work-speed {
+  position: absolute;
+  bottom: 57px;
+  right: 11px;
+  background-color: #ffc107;
+  opacity: 1;
+  color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 50px;
+  //     text-shadow:
+  //    -1px -1px 0 #333,
+  //     1px -1px 0 #333,
+  //     -1px 1px 0 #333,
+  //      1px 1px 0 #333;
+}
+
 .display-on-hover:hover {
   display: block;
 }
 
 .hide-on-hover:hover {
   display: none;
+}
+
+.display-5 {
+  font-size: 3rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.display-6 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+body {
+  background-color: rgb(252, 249, 249);
 }

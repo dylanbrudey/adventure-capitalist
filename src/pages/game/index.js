@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Page from '..';
+import Header from '../../components/header';
 import Product from './product';
 
 const Game = ({ money, products }) => {
@@ -8,6 +9,7 @@ const Game = ({ money, products }) => {
 
   return (
     <Page>
+      <Header />
       <div className="container">
         <div className="col p-3">
           {products.map((product, index) => (
@@ -30,14 +32,5 @@ const mapStateToProps = (state) => ({
   products: state.game.products,
   money: state.game.money
 });
-
-// function mapStateToProps(state) {
-//   console.log(state);
-//   return {
-//     a: 42,
-//     todos: state.todos,
-//     filter: state.visibilityFilter
-//   };
-// }
 
 export default connect(mapStateToProps)(Game);

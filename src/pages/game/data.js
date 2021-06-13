@@ -8,11 +8,12 @@ const productList = [{
   managerUnlockPrice: 1000,
   managerUnlocked: false,
   managerAvailable: false,
+  managerWorkSpeed: 1,
   managerImage: 'https://www.pngrepo.com/png/23036/180/man.png',
   completionPurcent: 0,
   nextLevel: {
     level: 2,
-    moneyRequired: 0,
+    moneyRequired: 10,
     activated: false
   }
 }, {
@@ -25,11 +26,12 @@ const productList = [{
   managerUnlockPrice: 4000,
   managerUnlocked: false,
   managerAvailable: false,
+  managerWorkSpeed: 3,
   managerImage: 'https://www.pngrepo.com/png/51675/180/man.png',
   completionPurcent: 0,
   nextLevel: {
     level: 2,
-    moneyRequired: 0,
+    moneyRequired: 60,
     activated: false
   }
 }, {
@@ -42,11 +44,12 @@ const productList = [{
   managerUnlockPrice: 8000,
   managerUnlocked: false,
   managerAvailable: false,
+  managerWorkSpeed: 5,
   managerImage: 'https://www.pngrepo.com/png/91859/180/man.png',
   completionPurcent: 0,
   nextLevel: {
     level: 2,
-    moneyRequired: 0,
+    moneyRequired: 160,
     activated: false
   }
 }];
