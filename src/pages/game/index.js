@@ -13,7 +13,7 @@ const Game = ({ money, products }) => {
       <div className="container">
         <div className="col p-3">
           {products.map((product, index) => (
-            <Product productIndex={index} />
+            <Product key={product.name} productIndex={index} />
           ))}
         </div>
       </div>

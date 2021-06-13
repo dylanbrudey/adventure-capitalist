@@ -19,7 +19,7 @@ const LockedProductProperties = ({
   // };
   return (
     <Col className="ml-5 pl-5 text-center" xs={4}>
-      <button type="button" className="card mb-2 mt-4 unlock-button" onClick={() => dispatch(unlockProduct(productIndex))} disabled={!unlockProductButton}>
+      <button type="button" className="card mb-2 mt-5 unlock-button" onClick={() => dispatch(unlockProduct(productIndex))} disabled={!unlockProductButton}>
         <div className="card-body">
           <h5 className="card-title display-4">{showUnlockPrice}</h5>
         </div>

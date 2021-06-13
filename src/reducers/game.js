@@ -1,7 +1,7 @@
 import { actionsType } from '../actions/game';
-import productList from '../components/data';
+import { productList, money } from '../components/data';
 
-const initialState = { money: 1000, products: productList };
+const initialState = { money, products: productList };
 
 const addMoney = (state = initialState, action) => {
   let currentState = { ...state };

@@ -24,7 +24,7 @@ const UnlockedProductProperties = ({
       </div>
       <div className="card">
         <button type="button" className="btn btn-warning text-white" onClick={() => dispatch(buyNextLevel(productIndex))} disabled={!nextLevel.activated}>
-          <span className="display-5">{showNextLevel}</span>
+          <span className="display-6">{showNextLevel}</span>
         </button>
       </div>
     </Col>
