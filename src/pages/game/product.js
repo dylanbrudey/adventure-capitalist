@@ -39,15 +39,19 @@ const Product = ({
   useEffect(() => {
     dispatch(updateCompletionBar(productIndex));
   }, [money]);
-  const handleKeyDown = (e) => (
-    e.target.key === 13 ? e.preventDefault() : null
-  );
+
+  const handleKeyDown = (e) => {
+    console.log(e.keyCode);
+    if (e.keyCode === 13) {
+      e.preventDefault();
+    }
+  };
   return (
     <div>
       <Row>
         <Col xs={5}>
           <div>
-            <button type="button" className="btn" onKeyDown={(e) => handleKeyDown(e)} onClick={() => dispatch(addMoney(productIndex))} disabled={!unlock}>
+            <button tabIndex={productIndex} type="button" className="btn" onKeyDown={(e) => handleKeyDown(e)} onClick={() => dispatch(addMoney(productIndex))} disabled={!unlock}>
               <div className="img-container">
                 <img src={`./images/products/${image}.jpg`} className="img-fluid rounded" alt={name} />
                 <div className="text-block-price">
