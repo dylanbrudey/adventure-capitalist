@@ -1,5 +1,5 @@
 {
-  "name": "@so-xzen/my-react",
+  "name": "@dylanbrudey/adventure-capitalist",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,14 +9,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xzen/my-react.git"
+    "url": "git+https://github.com/dylanbrudey/adventure-capitalist.git"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/xzen/my-react/issues"
-  },
-  "homepage": "https://github.com/xzen/my-react#readme",
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
