@@ -1,30 +1,7 @@
 import { actionsType } from '../actions/game';
-import productList from '../pages/game/data';
+import productList from '../components/data';
 
 const initialState = { money: 1000, products: productList };
-
-// const addComment = (state, action) => {
-//   const commentsUpdated = state;
-//   const date = new Date();
-
-//   const newComments = state[action.id].comments.concat({
-//     date: date.toUTCString(),
-//     text: action.text
-//   });
-
-//   commentsUpdated[action.id].comments = newComments;
-
-//   return commentsUpdated;
-// };
-
-// const comments = (state = initialState, action) => {
-//   switch (action.type) {
-//     case actionsType.ADD_COMMENT:
-//       return addComment(state, action);
-//     default:
-//       return state;
-//   }
-// };
 
 const addMoney = (state = initialState, action) => {
   let currentState = { ...state };
@@ -45,21 +22,6 @@ const addMoney = (state = initialState, action) => {
   };
   return currentState;
 };
-
-// function updateObjectInArray(array, action) {
-//   return array.map((item, index) => {
-//     if (index !== action.index) {
-//       // This isn't the item we care about - keep it as-is
-//       return item;
-//     }
-
-//     // Otherwise, this is the one we want - return an updated value
-//     return {
-//       ...item,
-//       ...action.item
-//     };
-//   });
-// }
 
 const buyNextLevel = (state = initialState, action) => {
   let currentState = { ...state };
@@ -83,7 +45,6 @@ const buyNextLevel = (state = initialState, action) => {
     })
   };
   currentState = { ...currentState, money: currentState.money - moneyRequired };
-  // (Math.round(price * 1.25)
 
   return currentState;
 };
@@ -110,9 +71,6 @@ const addManager = (state = initialState, action) => {
 
 const updateNextLevelAvailability = (state = initialState, action) => {
   let currentState = { ...state };
-  console.log(currentState);
-  console.log(action.available);
-  // if (money >= moneyRequired && !activated) {
   if (action.available) {
     currentState = {
       ...currentState,
@@ -146,9 +104,6 @@ const updateNextLevelAvailability = (state = initialState, action) => {
 
 const updateManagerAvailability = (state = initialState, action) => {
   let currentState = { ...state };
-  console.log(currentState);
-
-  // if (money >= managerUnlockPrice && unlock) {
   if (action.available) {
     currentState = {
       ...currentState,
@@ -163,7 +118,6 @@ const updateManagerAvailability = (state = initialState, action) => {
       })
     };
   } else {
-  // if (money < managerUnlockPrice && !unlock) {
     currentState = {
       ...currentState,
       products: currentState.products.map((product, index) => {
@@ -183,7 +137,6 @@ const updateManagerAvailability = (state = initialState, action) => {
 
 const updateCompletionBar = (state = initialState, action) => {
   let currentState = { ...state };
-  console.log(currentState);
   const { moneyRequired } = currentState.products[action.productIndex].nextLevel;
 
   currentState = {
