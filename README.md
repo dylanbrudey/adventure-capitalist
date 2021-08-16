@@ -1,5 +1,7 @@
 # Adventure Capitalist
 
+![title](images/screenshots/screenshot-1.png)
+
 ## Context
 Adventure Capitalist-like game
 
