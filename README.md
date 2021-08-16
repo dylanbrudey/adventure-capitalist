@@ -21,13 +21,15 @@ Install steps to start the game.
 git clone https://github.com/dylanbrudey/cloud-gaming-portal.git
 ```
 
-### Project setup 
+### Requirements
 
-#### Installation
+NodeJS v14
+
+### Installation
 ```
 npm install
 ```
-#### Launch the game
+### Launch the game
 ```
 npm start
 ```
