@@ -18,7 +18,7 @@ Install steps to start the game.
 ### Get the project
 
 ```
-git clone https://github.com/dylanbrudey/cloud-gaming-portal.git
+git clone https://github.com/dylanbrudey/adventure-capitalist.git
 ```
 
 ### Requirements
